@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🧾 Invoice</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="topbar">
+  <div class="brand">🍭 Sweet Bites</div>
+  <div class="nav-links"><a href="address.html">← Address</a></div>
+</nav>
+<div class="steps">
+  <div class="step done"><div class="step-dot">✓</div><div class="step-label">Shop</div></div>
+  <div class="step-line done"></div>
+  <div class="step done"><div class="step-dot">✓</div><div class="step-label">Cart</div></div>
+  <div class="step-line done"></div>
+  <div class="step done"><div class="step-dot">✓</div><div class="step-label">Address</div></div>
+  <div class="step-line done"></div>
+  <div class="step active"><div class="step-dot">4</div><div class="step-label">Bill</div></div>
+  <div class="step-line"></div>
+  <div class="step"><div class="step-dot">5</div><div class="step-label">Pay</div></div>
+</div>
+<div class="page-wrap">
+  <div class="bill-card">
+    <div class="bill-top">
+      <div style="font-size:38px">🧾</div>
+      <div>
+        <div class="bill-brand">Sweet Bites</div>
+        <div class="bill-date" id="billDate"></div>
+      </div>
+    </div>
+    <ul id="billItems"></ul>
+    <div class="bill-total">
+      <span>Total Amount</span>
+      <span id="billTotal">₹0</span>
+    </div>
+  </div>
+  <div class="actions">
+    <button class="btn-outline" onclick="window.location.href='cart.html'">← Edit Cart</button>
+    <button onclick="goPayment()">Pay Now 💳</button>
+  </div>
+</div>
+<script>document.getElementById('billDate').textContent = new Date().toLocaleDateString('en-IN',{weekday:'long',year:'numeric',month:'long',day:'numeric'});</script>
+<script src="script.js"></script>
+</body>
+</html>

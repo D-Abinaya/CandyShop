@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🛒 Your Cart</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="topbar">
+  <div class="brand">🍭 Sweet Bites</div>
+  <div class="nav-links"><a href="products.html">← Back to Shop</a></div>
+  <button class="cart-btn" onclick="goCart()">🛒 Cart <span class="cart-count" id="cartCount">0</span></button>
+</nav>
+<div class="steps">
+  <div class="step done"><div class="step-dot">✓</div><div class="step-label">Shop</div></div>
+  <div class="step-line done"></div>
+  <div class="step active"><div class="step-dot">2</div><div class="step-label">Cart</div></div>
+  <div class="step-line"></div>
+  <div class="step"><div class="step-dot">3</div><div class="step-label">Address</div></div>
+  <div class="step-line"></div>
+  <div class="step"><div class="step-dot">4</div><div class="step-label">Bill</div></div>
+  <div class="step-line"></div>
+  <div class="step"><div class="step-dot">5</div><div class="step-label">Pay</div></div>
+</div>
+<div class="page-wrap">
+  <div class="sect-title">🛒 Your Cart</div>
+  <ul id="cartItems"></ul>
+  <div class="total-strip" id="totalBox" style="display:none">
+    <div><div class="lbl">Order Total</div><div class="amt" id="total">₹0</div></div>
+    <div style="font-size:30px">🛍️</div>
+  </div>
+  <div class="actions" id="actionBtns" style="display:none">
+    <button class="btn-outline" onclick="window.location.href='products.html'">← Add More</button>
+    <button class="btn-green" onclick="goAddress()">Proceed → 📍</button>
+  </div>
+</div>
+<script src="script.js"></script>
+<script>
+  const c = JSON.parse(localStorage.getItem('cart')||'[]');
+  document.getElementById('cartCount').textContent = c.length;
+</script>
+</body>
+</html>

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>💳 Payment</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<nav class="topbar">
+  <div class="brand">🍭 Sweet Bites</div>
+  <div class="nav-links"><a href="bill.html">← Bill</a></div>
+</nav>
+<div class="steps">
+  <div class="step done"><div class="step-dot">✓</div><div class="step-label">Shop</div></div>
+  <div class="step-line done"></div>
+  <div class="step done"><div class="step-dot">✓</div><div class="step-label">Cart</div></div>
+  <div class="step-line done"></div>
+  <div class="step done"><div class="step-dot">✓</div><div class="step-label">Address</div></div>
+  <div class="step-line done"></div>
+  <div class="step done"><div class="step-dot">✓</div><div class="step-label">Bill</div></div>
+  <div class="step-line done"></div>
+  <div class="step active"><div class="step-dot">5</div><div class="step-label">Pay</div></div>
+</div>
+<div class="payment-wrap">
+  <div class="card-prev">
+    <div class="card-chip"></div>
+    <div class="card-num" id="prevNum">•••• •••• •••• ••••</div>
+    <div class="card-meta">
+      <div><div style="font-size:10px;opacity:.6;margin-bottom:2px">CARD HOLDER</div><div id="prevName">YOUR NAME</div></div>
+      <div><div style="font-size:10px;opacity:.6;margin-bottom:2px">EXPIRES</div><div id="prevExp">MM/YY</div></div>
+    </div>
+  </div>
+  <div class="pay-form">
+    <h3>💳 Enter Card Details</h3>
+    <div class="field">
+      <label class="form-label">Card Number</label>
+      <input id="cardNum" type="text" placeholder="1234 5678 9012 3456" maxlength="19"
+        oninput="fmtCard(this);document.getElementById('prevNum').textContent=this.value||'•••• •••• •••• ••••'">
+    </div>
+    <div class="field">
+      <label class="form-label">Card Holder Name</label>
+      <input id="cardName" type="text" placeholder="Name on card"
+        oninput="document.getElementById('prevName').textContent=this.value.toUpperCase()||'YOUR NAME'">
+    </div>
+    <div class="two-col">
+      <div class="field">
+        <label class="form-label">Expiry</label>
+        <input id="cardExp" type="text" placeholder="MM/YY" maxlength="5"
+          oninput="document.getElementById('prevExp').textContent=this.value||'MM/YY'">
+      </div>
+      <div class="field">
+        <label class="form-label">CVV</label>
+        <input id="cardCvv" type="password" placeholder="•••" maxlength="3">
+      </div>
+    </div>
+    <button class="btn-full btn-green" style="margin-top:10px" onclick="payNow()">🔒 Pay Securely</button>
+    <p class="secure-note">🔐 Encrypted & 100% secure payment</p>
+  </div>
+</div>
+<script>function fmtCard(el){let v=el.value.replace(/\D/g,'').substring(0,16);el.value=v.replace(/(.{4})/g,'$1 ').trim();}</script>
+<script src="script.js"></script>
+</body>
+</html>

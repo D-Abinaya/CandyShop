@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🍭 Sweet Bites — Shop</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<!-- STICKY TOPBAR with CART -->
+<nav class="topbar">
+  <div class="brand">🍭 Sweet Bites</div>
+  <div class="nav-links">
+    <a href="orders.html">📦 My Orders</a>
+    <a href="#" onclick="logoutUser()">Logout</a>
+  </div>
+  <button class="cart-btn" onclick="goCart()">
+    🛒 Cart <span class="cart-count" id="cartCount">0</span>
+  </button>
+</nav>
+
+<!-- HERO BANNER -->
+<div class="shop-hero">
+  <div>
+    <h1>🍪 Cookies & 🍭 Candies</h1>
+    <p>Pick your favourites & treat yourself!</p>
+  </div>
+  <div class="user-badge" id="userBadge">👋 Guest</div>
+</div>
+
+<!-- CATEGORY TABS -->
+<div class="cat-strip">
+  <button class="cat-tab active" onclick="filterCat('all',this)">🍬 All Items</button>
+  <button class="cat-tab" onclick="filterCat('cookie',this)">🍪 Cookies</button>
+  <button class="cat-tab" onclick="filterCat('candy',this)">🍭 Candies</button>
+</div>
+
+<!-- PRODUCTS -->
+<div id="products"></div>
+
+<script src="script.js"></script>
+<script>
+  function filterCat(cat, el) {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    el.classList.add('active');
+    document.querySelectorAll('.product').forEach(p => {
+      p.style.display = (cat === 'all' || p.dataset.cat === cat) ? '' : 'none';
+    });
+  }
+  const u = JSON.parse(localStorage.getItem('loggedUser') || 'null');
+  if (u) document.getElementById('userBadge').textContent = '👋 ' + u.name;
+  const c = JSON.parse(localStorage.getItem('cart') || '[]');
+  document.getElementById('cartCount').textContent = c.length;
+</script>
+</body>
+</html>

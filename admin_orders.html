@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👑 Admin — All Orders</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── LOCK SCREEN ── */
+    .lock-screen {
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      background: linear-gradient(160deg,#1a1a2e 0%,#16213e 60%,#0f3460 100%);
+    }
+    .lock-card {
+      background: #fff; border-radius: 28px;
+      padding: 44px 38px; width: 100%; max-width: 380px;
+      box-shadow: 0 32px 80px rgba(0,0,0,.45);
+      text-align: center;
+    }
+    .lock-icon { font-size: 56px; margin-bottom: 10px; }
+    .lock-title {
+      font-family: 'Pacifico', cursive; font-size: 22px;
+      color: #7c4dff; margin-bottom: 6px;
+    }
+    .lock-sub { font-size: 13px; color: var(--muted); margin-bottom: 28px; }
+    .lock-input-wrap { position: relative; margin-bottom: 14px; }
+    .lock-input-wrap .eye-btn {
+      position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+      background: none; border: none; padding: 0; box-shadow: none;
+      font-size: 18px; cursor: pointer; color: var(--muted);
+      transition: none; transform: translateY(-50%);
+    }
+    .lock-input-wrap .eye-btn:hover { transform: translateY(-50%) scale(1.1); box-shadow: none; }
+    #adminPass { padding-right: 44px; border-color: #e8d8f8; }
+    #adminPass:focus { border-color: #7c4dff; box-shadow: 0 0 0 4px rgba(124,77,255,.12); }
+    .lock-btn {
+      width: 100%; background: linear-gradient(135deg,#7c4dff,#aa00ff);
+      box-shadow: 0 4px 18px rgba(124,77,255,.4);
+      margin-top: 4px;
+    }
+    .lock-btn:hover { box-shadow: 0 8px 28px rgba(124,77,255,.5); }
+    .lock-error {
+      background: #fff0f5; border: 2px solid #ffc0d0; border-radius: 10px;
+      padding: 10px 14px; font-size: 13px; font-weight: 800;
+      color: #e84393; margin-bottom: 14px; display: none;
+    }
+    .lock-hint {
+      margin-top: 16px; font-size: 12px; color: #b0a0b8;
+    }
+    .shake { animation: shake .4s ease; }
+    @keyframes shake {
+      0%,100%{transform:translateX(0)}
+      20%{transform:translateX(-8px)}
+      40%{transform:translateX(8px)}
+      60%{transform:translateX(-6px)}
+      80%{transform:translateX(6px)}
+    }
+
+    /* ── ADMIN CONTENT (hidden until unlocked) ── */
+    #adminContent { display: none; }
+    .admin-stats {
+      display: grid; grid-template-columns: repeat(3,1fr);
+      gap: 14px; margin-bottom: 24px;
+    }
+    .stat-card {
+      background: #fff; border: 2px solid #ede8ff;
+      border-radius: 18px; padding: 18px 16px; text-align: center;
+    }
+    .stat-icon { font-size: 28px; margin-bottom: 6px; }
+    .stat-val { font-size: 26px; font-weight: 900; color: #7c4dff; }
+    .stat-lbl { font-size: 11px; font-weight: 800; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+
+    /* search bar */
+    .search-bar {
+      position: relative; margin-bottom: 20px;
+    }
+    .search-bar input { padding-left: 40px; border-color: #ede8ff; }
+    .search-bar input:focus { border-color: #7c4dff; box-shadow: 0 0 0 4px rgba(124,77,255,.1); }
+    .search-bar .s-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); font-size: 16px; pointer-events: none; }
+
+    /* admin order card */
+    .admin-order-card {
+      background: #fff; border: 2px solid #ede8ff;
+      border-radius: 20px; padding: 20px 22px; margin-bottom: 14px;
+      transition: box-shadow .2s;
+    }
+    .admin-order-card:hover { box-shadow: 0 8px 28px rgba(124,77,255,.13); }
+    .aoc-head {
+      display: flex; justify-content: space-between; align-items: center;
+      border-bottom: 2px dashed #ede8ff; padding-bottom: 10px; margin-bottom: 12px;
+    }
+    .aoc-id { font-size: 15px; font-weight: 900; color: #7c4dff; }
+    .aoc-date { font-size: 12px; color: var(--muted); font-weight: 600; }
+    .aoc-customer {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 10px;
+    }
+    .aoc-avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg,#7c4dff,#aa00ff);
+      color: #fff; font-size: 14px; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+    .aoc-name { font-weight: 800; font-size: 14px; }
+    .aoc-email { font-size: 12px; color: var(--muted); }
+    .aoc-addr { font-size: 13px; color: var(--muted); margin-bottom: 10px; }
+    .aoc-items {
+      background: #f8f4ff; border-radius: 10px;
+      padding: 10px 16px; list-style: disc inside;
+      font-size: 13px; margin-bottom: 10px;
+    }
+    .aoc-items li { padding: 3px 0; }
+    .aoc-total {
+      text-align: right; font-size: 20px;
+      font-weight: 900; color: #7c4dff;
+    }
+    .no-results { text-align: center; padding: 50px; color: var(--muted); font-size: 15px; }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════
+     LOCK SCREEN
+══════════════════════════════════ -->
+<div class="lock-screen" id="lockScreen">
+  <div class="lock-card">
+    <div class="lock-icon">🔐</div>
+    <div class="lock-title">Admin Access</div>
+    <p class="lock-sub">Enter admin password to view all customer orders</p>
+
+    <div class="lock-error" id="lockError">❌ Wrong password! Try again.</div>
+
+    <div class="lock-input-wrap">
+      <input id="adminPass" type="password" placeholder="Enter admin password" onkeydown="if(event.key==='Enter')checkAdmin()">
+      <button class="eye-btn" onclick="toggleEye()" id="eyeBtn">👁️</button>
+    </div>
+    <button class="lock-btn" onclick="checkAdmin()">🔓 Unlock Admin Panel</button>
+    <p class="lock-hint">Only authorized admins can access this page</p>
+    <p style="margin-top:14px;font-size:12px;">
+      <a href="products.html" style="color:#7c4dff;font-weight:800;text-decoration:none;">← Back to Shop</a>
+    </p>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════
+     ADMIN CONTENT (shown after unlock)
+══════════════════════════════════ -->
+<div id="adminContent">
+  <nav class="topbar" style="background:linear-gradient(100deg,#7c4dff 0%,#aa00ff 60%,#e84393 100%);">
+    <div class="brand">👑 Admin Panel</div>
+    <div class="nav-links">
+      <a href="orders.html">My Orders</a>
+      <a href="products.html">🏠 Shop</a>
+      <a href="#" onclick="lockAdmin()">🔒 Lock</a>
+    </div>
+  </nav>
+
+  <div class="shop-hero" style="background:linear-gradient(120deg,#7c4dff,#aa00ff,#e84393)">
+    <div><h1>👑 All Customer Orders</h1><p>Every order saved in the SQL database</p></div>
+  </div>
+
+  <div class="orders-pg">
+
+    <!-- Stats row -->
+    <div class="admin-stats" id="statsRow">
+      <div class="stat-card"><div class="stat-icon">📦</div><div class="stat-val" id="statOrders">0</div><div class="stat-lbl">Total Orders</div></div>
+      <div class="stat-card"><div class="stat-icon">👥</div><div class="stat-val" id="statCustomers">0</div><div class="stat-lbl">Customers</div></div>
+      <div class="stat-card"><div class="stat-icon">💰</div><div class="stat-val" id="statRevenue">₹0</div><div class="stat-lbl">Revenue</div></div>
+    </div>
+
+    <!-- Search -->
+    <div class="search-bar">
+      <span class="s-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search by customer name or email..." oninput="filterOrders(this.value)">
+    </div>
+
+    <div id="ordersContainer"></div>
+
+  </div>
+</div>
+
+<script src="script.js"></script>
+<script>
+const ADMIN_PASS = "key123";
+
+function checkAdmin() {
+  const val = document.getElementById("adminPass").value;
+  const err = document.getElementById("lockError");
+  const card = document.querySelector(".lock-card");
+
+  if (val === ADMIN_PASS) {
+    sessionStorage.setItem("adminUnlocked", "yes");
+    document.getElementById("lockScreen").style.display = "none";
+    document.getElementById("adminContent").style.display = "block";
+    loadAdminOrders();
+  } else {
+    err.style.display = "block";
+    card.classList.remove("shake");
+    void card.offsetWidth; // reflow to restart animation
+    card.classList.add("shake");
+    document.getElementById("adminPass").value = "";
+    document.getElementById("adminPass").focus();
+  }
+}
+
+function toggleEye() {
+  const inp = document.getElementById("adminPass");
+  inp.type = inp.type === "password" ? "text" : "password";
+  document.getElementById("eyeBtn").textContent = inp.type === "password" ? "👁️" : "🙈";
+}
+
+function lockAdmin() {
+  sessionStorage.removeItem("adminUnlocked");
+  document.getElementById("adminContent").style.display = "none";
+  document.getElementById("lockScreen").style.display = "flex";
+  document.getElementById("adminPass").value = "";
+}
+
+// Auto-unlock if already unlocked this session
+if (sessionStorage.getItem("adminUnlocked") === "yes") {
+  document.getElementById("lockScreen").style.display = "none";
+  document.getElementById("adminContent").style.display = "block";
+}
+
+// ── Load all orders ──────────────────────────────
+let allOrdersData = [];
+
+async function loadAdminOrders() {
+  const db  = await getDB();
+  const res = db.exec("SELECT * FROM orders ORDER BY id DESC");
+
+  if (!res.length || !res[0].values.length) {
+    document.getElementById("ordersContainer").innerHTML =
+      '<div class="no-results">📭 No orders found in the database.</div>';
+    return;
+  }
+
+  const cols = res[0].columns;
+  allOrdersData = res[0].values.map(row => {
+    const obj = {};
+    cols.forEach((c, i) => obj[c] = row[i]);
+    return obj;
+  });
+
+  // Stats
+  const totalRev = allOrdersData.reduce((s,o) => s + (o.total||0), 0);
+  const uniqueCust = new Set(allOrdersData.map(o => o.customer_email)).size;
+  document.getElementById("statOrders").textContent    = allOrdersData.length;
+  document.getElementById("statCustomers").textContent = uniqueCust;
+  document.getElementById("statRevenue").textContent   = "₹" + totalRev;
+
+  renderOrders(allOrdersData);
+}
+
+function renderOrders(orders) {
+  const container = document.getElementById("ordersContainer");
+  if (!orders.length) {
+    container.innerHTML = '<div class="no-results">🔍 No matching orders found.</div>';
+    return;
+  }
+  container.innerHTML = "";
+  orders.forEach(obj => {
+    const items   = JSON.parse(obj.items || "{}");
+    const itemsLi = Object.entries(items)
+      .map(([n, {qty, price}]) => `<li>${n} × ${qty} = ₹${price * qty}</li>`).join("");
+    const initials = (obj.customer_name || "?").split(" ").map(w=>w[0]).join("").toUpperCase().slice(0,2);
+
+    const card = document.createElement("div");
+    card.className = "admin-order-card";
+    card.innerHTML = `
+      <div class="aoc-head">
+        <span class="aoc-id">Order #${obj.id}</span>
+        <span class="aoc-date">${obj.order_date}</span>
+      </div>
+      <div class="aoc-customer">
+        <div class="aoc-avatar">${initials}</div>
+        <div><div class="aoc-name">${obj.customer_name}</div><div class="aoc-email">${obj.customer_email}</div></div>
+      </div>
+      <div class="aoc-addr">📍 ${obj.address}</div>
+      <ul class="aoc-items">${itemsLi}</ul>
+      <div class="aoc-total">💰 ₹${obj.total}</div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+function filterOrders(q) {
+  const ql = q.toLowerCase();
+  const filtered = allOrdersData.filter(o =>
+    (o.customer_name  || "").toLowerCase().includes(ql) ||
+    (o.customer_email || "").toLowerCase().includes(ql)
+  );
+  renderOrders(filtered);
+}
+
+// If already unlocked, load immediately
+if (sessionStorage.getItem("adminUnlocked") === "yes") {
+  document.addEventListener("DOMContentLoaded", loadAdminOrders);
+}
+</script>
+</body>
+</html>
